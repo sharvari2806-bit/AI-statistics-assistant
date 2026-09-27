@@ -22,11 +22,9 @@ if uploaded_file is not None:
 
     st.success("Dataset uploaded successfully! ✅")
 
-    # Dataset Preview
     st.header("📋 Dataset Preview")
     st.dataframe(df, use_container_width=True)
 
-    # Dataset Information
     st.header("📊 Dataset Information")
 
     col1, col2, col3 = st.columns(3)
@@ -49,7 +47,6 @@ if uploaded_file is not None:
 
     if len(numerical_columns) > 0:
 
-        # Statistical Summary
         st.header("🔢 Statistical Summary")
 
         st.dataframe(
@@ -57,7 +54,6 @@ if uploaded_file is not None:
             use_container_width=True
         )
 
-        # Histogram
         st.header("📈 Data Visualization")
 
         selected_column = st.selectbox(
@@ -117,7 +113,6 @@ if uploaded_file is not None:
 
             ax.set_xlabel(x_column)
             ax.set_ylabel(y_column)
-
             ax.set_title(
                 f"{x_column} vs {y_column}"
             )
@@ -185,6 +180,85 @@ if uploaded_file is not None:
                 "✅ No possible outliers detected "
                 "using the IQR method."
             )
+
+        # Ask Your Data
+        st.header("🤖 Ask Your Data")
+
+        st.write(
+            "Ask a simple statistical question "
+            "about your dataset."
+        )
+
+        question = st.text_input(
+            "💬 Enter your question"
+        )
+
+        if st.button("🔍 Analyze"):
+
+            q = question.lower()
+
+            found_column = None
+
+            for column in numerical_columns:
+
+                if column.lower() in q:
+                    found_column = column
+                    break
+
+            if found_column is not None:
+
+                data = df[found_column].dropna()
+
+                if "average" in q or "mean" in q:
+
+                    answer = data.mean()
+
+                    st.success(
+                        f"The mean of {found_column} "
+                        f"is **{answer:.2f}**."
+                    )
+
+                elif "median" in q:
+
+                    answer = data.median()
+
+                    st.success(
+                        f"The median of {found_column} "
+                        f"is **{answer:.2f}**."
+                    )
+
+                elif "maximum" in q or "highest" in q or "max" in q:
+
+                    answer = data.max()
+
+                    st.success(
+                        f"The maximum of {found_column} "
+                        f"is **{answer:.2f}**."
+                    )
+
+                elif "minimum" in q or "lowest" in q or "min" in q:
+
+                    answer = data.min()
+
+                    st.success(
+                        f"The minimum of {found_column} "
+                        f"is **{answer:.2f}**."
+                    )
+
+                else:
+
+                    st.info(
+                        "Try asking about the "
+                        "mean, median, maximum, "
+                        "or minimum."
+                    )
+
+            else:
+
+                st.warning(
+                    "I couldn't identify a numerical "
+                    "column in your question."
+                )
 
     else:
 
