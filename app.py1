@@ -22,8 +22,16 @@ if uploaded_file is not None:
 
     st.success("Dataset uploaded successfully! ✅")
 
+    # -----------------------------
+    # DATA PREVIEW
+    # -----------------------------
+
     st.header("📋 Dataset Preview")
     st.dataframe(df, use_container_width=True)
+
+    # -----------------------------
+    # DATASET INFORMATION
+    # -----------------------------
 
     st.header("📊 Dataset Information")
 
@@ -47,12 +55,20 @@ if uploaded_file is not None:
 
     if len(numerical_columns) > 0:
 
+        # -----------------------------
+        # STATISTICS
+        # -----------------------------
+
         st.header("🔢 Statistical Summary")
 
         st.dataframe(
             df[numerical_columns].describe(),
             use_container_width=True
         )
+
+        # -----------------------------
+        # HISTOGRAM
+        # -----------------------------
 
         st.header("📈 Data Visualization")
 
@@ -76,7 +92,10 @@ if uploaded_file is not None:
 
         st.pyplot(fig)
 
-        # Correlation
+        # -----------------------------
+        # CORRELATION
+        # -----------------------------
+
         if len(numerical_columns) >= 2:
 
             st.header("🔗 Correlation Analysis")
@@ -113,13 +132,17 @@ if uploaded_file is not None:
 
             ax.set_xlabel(x_column)
             ax.set_ylabel(y_column)
+
             ax.set_title(
                 f"{x_column} vs {y_column}"
             )
 
             st.pyplot(fig)
 
-        # Outlier Detection
+        # -----------------------------
+        # OUTLIER DETECTION
+        # -----------------------------
+
         st.header("🚨 Outlier Detection")
 
         outlier_column = st.selectbox(
@@ -177,20 +200,17 @@ if uploaded_file is not None:
         else:
 
             st.success(
-                "✅ No possible outliers detected "
-                "using the IQR method."
+                "✅ No possible outliers detected."
             )
 
-        # Ask Your Data
+        # -----------------------------
+        # ASK YOUR DATA
+        # -----------------------------
+
         st.header("🤖 Ask Your Data")
 
-        st.write(
-            "Ask a simple statistical question "
-            "about your dataset."
-        )
-
         question = st.text_input(
-            "💬 Enter your question"
+            "💬 Ask a statistical question"
         )
 
         if st.button("🔍 Analyze"):
@@ -227,7 +247,11 @@ if uploaded_file is not None:
                         f"is **{answer:.2f}**."
                     )
 
-                elif "maximum" in q or "highest" in q or "max" in q:
+                elif (
+                    "maximum" in q
+                    or "highest" in q
+                    or "max" in q
+                ):
 
                     answer = data.max()
 
@@ -236,7 +260,11 @@ if uploaded_file is not None:
                         f"is **{answer:.2f}**."
                     )
 
-                elif "minimum" in q or "lowest" in q or "min" in q:
+                elif (
+                    "minimum" in q
+                    or "lowest" in q
+                    or "min" in q
+                ):
 
                     answer = data.min()
 
@@ -248,9 +276,8 @@ if uploaded_file is not None:
                 else:
 
                     st.info(
-                        "Try asking about the "
-                        "mean, median, maximum, "
-                        "or minimum."
+                        "Try asking about mean, "
+                        "median, maximum or minimum."
                     )
 
             else:
@@ -260,15 +287,28 @@ if uploaded_file is not None:
                     "column in your question."
                 )
 
-    else:
+        # -----------------------------
+        # AUTOMATIC INSIGHTS
+        # -----------------------------
 
-        st.info(
-            "No numerical columns were found "
-            "in this dataset."
+        st.header("🧠 Automatic Insights")
+
+        # Highest average
+        averages = df[numerical_columns].mean(
+            numeric_only=True
         )
 
-else:
+        highest_average_column = averages.idxmax()
 
-    st.info(
-        "👆 Upload a CSV file to start analyzing your data."
-    )
+        st.write(
+            f"📌 **Highest average:** "
+            f"{highest_average_column} "
+            f"({averages[highest_average_column]:.2f})"
+        )
+
+        # Most variable column
+        standard_deviations = df[
+            numerical_columns
+        ].std()
+
+        most_variable_column = standard_de
