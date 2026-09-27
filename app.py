@@ -177,4 +177,5 @@ if uploaded_file is not None:
 
         question = st.text_input(
             "💬 Ask a question about your dataset",
-            placeholder="Example: What
+            placeholder="Example: What is the average age?"
+        )
